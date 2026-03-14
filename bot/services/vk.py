@@ -57,7 +57,7 @@ class VkService(_Service):
         http = requests.Session()
         http.headers.update(
             {
-                "User-agent": "VKAndroidApp/6.2-5091 (Android 9; SDK 28; samsungexynos7870; samsung j6lte; 720x1450)"
+                "User-agent": "KateMobileAndroid/117-565 (Android 16; SDK 36; arm64-v8a; Xiaomi Mi 9T Pro; ru)"
             }
         )
         self._session = vk_api.VkApi(

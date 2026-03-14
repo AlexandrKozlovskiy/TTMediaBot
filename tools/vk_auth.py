@@ -23,7 +23,7 @@ client_id = "2274003"
 client_secret = "hHbZxrka2uZ6jB1inYsH"
 api_ver = "5.89"
 scope = "all"
-user_agent = "VKAndroidApp/6.2-5091 (Android 9; SDK 28; samsungexynos7870; samsung j6lte; 720x1450)"
+user_agent = "KateMobileAndroid/117-565 (Android 16; SDK 36; arm64-v8a; Xiaomi Mi 9T Pro; ru)"
 api_url = "https://api.vk.com/method/"
 receipt = "fkdoOMX_yqQ:APA91bHbLn41RMJmAbuFjqLg5K-QW7si9KajBGCDJxcpzbuvEcPIk9rwx5HWa1yo1pTzpaKL50mXiWvtqApBzymO2sRKlyRiWqqzjMTXUyA5HnRJZyXWWGPX8GkFxQQ4bLrDCcnb93pn"
 
