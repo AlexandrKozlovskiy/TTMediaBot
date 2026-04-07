@@ -60,8 +60,8 @@ class PlayPauseCommand(Command):
                         ).format(nickname=user.nickname, request=arg),
                         type=2,
                     )
-                self.run_async(self.player.play, track_list)
-                return self.getMessageForUser(track_list[0])
+                self.player.play(track_list)
+                return self.getMessageForUser(self.player.track)
             except errors.NothingFoundError:
                 return self.translator.translate("Nothing is found for your query")
             except errors.ServiceError:
@@ -70,9 +70,9 @@ class PlayPauseCommand(Command):
                 )
         else:
             if self.player.state == State.Playing:
-                self.run_async(self.player.pause)
+                self.player.pause()
             elif self.player.state == State.Paused:
-                self.run_async(self.player.play)
+                self.player.play()
 
 
 class PlayUrlCommand(Command):

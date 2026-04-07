@@ -12,6 +12,7 @@ from bot.player.enums import Mode, State, TrackType
 from bot.player.track import Track
 from bot.sound_devices import SoundDevice, SoundDeviceType
 
+from yt_dlp.utils import YoutubeDLError
 
 if TYPE_CHECKING:
     from bot import Bot
@@ -85,7 +86,10 @@ class Player:
                 self.track_index = self._index_list[0]
             else:
                 self.track_index = start_track_index if start_track_index else 0
-            self._play(self.track.url)
+            try:
+                self._play(self.track.url)
+            except YoutubeDLError:
+                self.next()
         else:
             self._player.pause = False
         self._player.volume = self.volume
@@ -114,16 +118,18 @@ class Player:
         self._player.pause = False
         self._player.play(arg)
 
-    def next(self) -> None:
+    def next(self, prev_index: Optional[int] =-1) -> None:
         track_index = self.track_index
         if len(self.track_list) > 0:
+            if prev_index == -1:
+                prev_index = self.track_index
             if self.mode == Mode.Random:
                 try:
                     track_index = self._index_list[
                         self._index_list.index(self.track_index) + 1
                     ]
                 except IndexError:
-                    track_index = 0
+                    track_index = prev_index
             else:
                 track_index += 1
         else:
@@ -131,21 +137,27 @@ class Player:
         try:
             self.play_by_index(track_index)
         except errors.IncorrectTrackIndexError:
+            if prev_index >= 0 and self.track_index != prev_index:
+                self.track_index = prev_index
             if self.mode == Mode.RepeatTrackList:
-                self.play_by_index(0)
+                self.play_by_index(prev_index)
             else:
                 raise errors.NoNextTrackError()
+        except YoutubeDLError:
+            self.next(prev_index)
 
-    def previous(self) -> None:
+    def previous(self, prev_index: Optional[int] =-1) -> None:
         track_index = self.track_index
         if len(self.track_list) > 0:
+            if prev_index == -1:
+                prev_index = self.track_index
             if self.mode == Mode.Random:
                 try:
                     track_index = self._index_list[
                         self._index_list.index(self.track_index) - 1
                     ]
                 except IndexError:
-                    track_index = len(self.track_list) - 1
+                    track_index = prev_index
             else:
                 track_index -= 1
         else:
@@ -153,13 +165,17 @@ class Player:
         try:
             self.play_by_index(track_index)
         except errors.IncorrectTrackIndexError:
+            if prev_index >= 0 and self.track_index != prev_index:
+                self.track_index = prev_index
             if self.mode == Mode.RepeatTrackList:
-                self.play_by_index(len(self.track_list) - 1)
+                self.play_by_index(prev_index)
             else:
                 raise errors.NoPreviousTrackError
+        except YoutubeDLError:
+            self.previous(prev_index)
 
     def play_by_index(self, index: int) -> None:
-        if index < len(self.track_list) and index >= (0 - len(self.track_list)):
+        if index < len(self.track_list) and index >= 0:
             self.track_index = index
             self._play(self.track.url)
             self.state = State.Playing
