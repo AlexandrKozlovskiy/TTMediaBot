@@ -18,6 +18,17 @@ if TYPE_CHECKING:
 
 
 class Player:
+    @property
+    def track(self) -> Track:
+        if self.track_index >= 0 and self.track_index <len(self.track_list):
+            return self.track_list[self.track_index]
+        elif not hasattr(self, "_track"):
+            self._track = Track()
+        return self._track
+    @track.setter
+    def track(self, value: Track) -> None:
+        self._track = value
+
     def __init__(self, bot: Bot):
         self.config = bot.config.player
         self.cache = bot.cache
@@ -72,10 +83,8 @@ class Player:
             if not start_track_index and self.mode == Mode.Random:
                 self.shuffle(True)
                 self.track_index = self._index_list[0]
-                self.track = self.track_list[self.track_index]
             else:
                 self.track_index = start_track_index if start_track_index else 0
-                self.track = tracks[self.track_index]
             self._play(self.track.url)
         else:
             self._player.pause = False
@@ -90,7 +99,6 @@ class Player:
         self.state = State.Stopped
         self._player.stop()
         self.track_list = []
-        self.track = Track()
         self.track_index = -1
 
     def _play(self, arg: str, save_to_recents: bool = True) -> None:
@@ -155,8 +163,7 @@ class Player:
 
     def play_by_index(self, index: int) -> None:
         if index < len(self.track_list) and index >= (0 - len(self.track_list)):
-            self.track = self.track_list[index]
-            self.track_index = self.track_list.index(self.track)
+            self.track_index = index
             self._play(self.track.url)
             self.state = State.Playing
         else:
