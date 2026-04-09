@@ -89,6 +89,8 @@ class Player:
             try:
                 self._play(self.track.url)
             except YoutubeDLError:
+                if (len(tracks)==1):
+                    raise
                 self.next()
         else:
             self._player.pause = False
@@ -144,6 +146,9 @@ class Player:
             else:
                 raise errors.NoNextTrackError()
         except YoutubeDLError:
+            if track_index == len(self.track_list) -1:
+                self.track_index = prev_index
+                raise 
             self.next(prev_index)
 
     def previous(self, prev_index: Optional[int] =-1) -> None:
@@ -172,6 +177,9 @@ class Player:
             else:
                 raise errors.NoPreviousTrackError
         except YoutubeDLError:
+            if track_index ==0:
+                self.track_index = prev_index
+                raise
             self.previous(prev_index)
 
     def play_by_index(self, index: int) -> None:
