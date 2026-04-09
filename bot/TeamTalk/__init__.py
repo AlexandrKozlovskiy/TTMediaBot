@@ -39,6 +39,7 @@ def _str(data: AnyStr) -> AnyStr:
 
 
 def split(text: str, max_length: int = app_vars.max_message_length) -> List[str]:
+    text = text.replace("","")
     if len(text) <= max_length:
         lines = [text]
     else:
