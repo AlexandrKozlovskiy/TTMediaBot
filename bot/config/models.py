@@ -63,8 +63,6 @@ class VkModel(BaseModel):
 
 class YtModel(BaseModel):
     enabled: bool = True
-class YtModel(BaseModel):
-    enabled: bool = True
     cookiefile_path: str = ""
 
 
