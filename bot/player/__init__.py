@@ -53,7 +53,7 @@ class Player:
         self.track: Track = Track()
         self.track_index: int = -1
         self.state = State.Stopped
-        self.mode = Mode.TrackList
+        self.mode = Mode(self.config.mode)
         self.volume = self.config.default_volume
 
     def initialize(self) -> None:
