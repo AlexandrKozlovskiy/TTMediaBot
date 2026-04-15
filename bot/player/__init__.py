@@ -120,67 +120,37 @@ class Player:
         self._player.pause = False
         self._player.play(arg)
 
-    def next(self, prev_index: Optional[int] =-1) -> None:
-        track_index = self.track_index
-        if len(self.track_list) > 0:
-            if prev_index == -1:
-                prev_index = self.track_index
+    def move(self, forward: bool) -> None:
+        error = forward and errors.NoNextTrackError or errors.NoPreviousTrackError
+        step = forward and 1 or -1
+        prev_index = track_index = self.track_index
+        def raiseErrorIfNeed():
+            if track_index <= 0 and not forward or track_index >= len(self.track_list) - 1 and forward:
+                self.track_index = prev_index
+                raise error
+        raiseErrorIfNeed()
+        track_index = self.track_index + step
+        range_start = track_index
+        range_end = forward and len(self.track_list) or -1
+        for i in range(range_start,range_end,step):
             if self.mode == Mode.Random:
-                try:
-                    track_index = self._index_list[
-                        self._index_list.index(self.track_index) + 1
-                    ]
-                except IndexError:
-                    track_index = prev_index
+                track_index = self._index_list[
+                    self._index_list.index(track_index)
+                ]
             else:
-                track_index += 1
-        else:
-            track_index = 0
-        try:
-            self.play_by_index(track_index)
-        except errors.IncorrectTrackIndexError:
-            if prev_index >= 0 and self.track_index != prev_index:
-                self.track_index = prev_index
-            if self.mode == Mode.RepeatTrackList:
-                self.play_by_index(prev_index)
-            else:
-                raise errors.NoNextTrackError()
-        except YoutubeDLError:
-            if track_index == len(self.track_list) -1:
-                self.track_index = prev_index
-                raise 
-            self.next(prev_index)
+                track_index = i
+            try:
+                self.play_by_index(track_index)
+                break
+            except YoutubeDLError as e:
+                error = e
+                raiseErrorIfNeed()
 
+    def next(self, prev_index: Optional[int] =-1) -> None:
+        self.move(True)
+        
     def previous(self, prev_index: Optional[int] =-1) -> None:
-        track_index = self.track_index
-        if len(self.track_list) > 0:
-            if prev_index == -1:
-                prev_index = self.track_index
-            if self.mode == Mode.Random:
-                try:
-                    track_index = self._index_list[
-                        self._index_list.index(self.track_index) - 1
-                    ]
-                except IndexError:
-                    track_index = prev_index
-            else:
-                track_index -= 1
-        else:
-            track_index = 0
-        try:
-            self.play_by_index(track_index)
-        except errors.IncorrectTrackIndexError:
-            if prev_index >= 0 and self.track_index != prev_index:
-                self.track_index = prev_index
-            if self.mode == Mode.RepeatTrackList:
-                self.play_by_index(prev_index)
-            else:
-                raise errors.NoPreviousTrackError
-        except YoutubeDLError:
-            if track_index ==0:
-                self.track_index = prev_index
-                raise
-            self.previous(prev_index)
+        self.move(False)
 
     def play_by_index(self, index: int) -> None:
         if index < len(self.track_list) and index >= 0:
