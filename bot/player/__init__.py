@@ -104,8 +104,6 @@ class Player:
     def stop(self) -> None:
         self.state = State.Stopped
         self._player.stop()
-        self.track_list = []
-        self.track_index = -1
 
     def _play(self, arg: str, save_to_recents: bool = True) -> None:
         if save_to_recents:
