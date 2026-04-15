@@ -59,20 +59,22 @@ class TeamTalkModel(BaseModel):
 class VkModel(BaseModel):
     enabled: bool = True
     token: str = ""
+    tracks_limit: int = 300
 
 
 class YtModel(BaseModel):
     enabled: bool = True
     cookiefile_path: str = ""
+    tracks_limit: int = 300
 
 
 class YamModel(BaseModel):
     enabled: bool = True
     token: str = ""
+    tracks_limit: int = 300
 
 
 class ServicesModel(BaseModel):
-    tracks_limit: int = 50
     default_service: str = "vk"
     vk: VkModel = VkModel()
     yam: YamModel = YamModel()
