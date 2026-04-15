@@ -72,6 +72,7 @@ class YamModel(BaseModel):
 
 
 class ServicesModel(BaseModel):
+    tracks_limit: int = 50
     default_service: str = "vk"
     vk: VkModel = VkModel()
     yam: YamModel = YamModel()

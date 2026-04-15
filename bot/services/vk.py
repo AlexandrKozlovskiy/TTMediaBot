@@ -127,7 +127,7 @@ class VkService(_Service):
             raise NotImplementedError()
 
     def search(self, query: str) -> List[Track]:
-        results = self.api.audio.search(q=query, count=300, sort=0)
+        results = self.api.audio.search(q=query, count=self.tracks_limit, sort=0)
         if "count" in results and results["count"] > 0:
             tracks: List[Track] = []
             for track in results["items"]:

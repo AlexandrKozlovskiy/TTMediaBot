@@ -50,6 +50,7 @@ from bot.services.yt import YtService
 class ServiceManager:
     def __init__(self, bot: Bot) -> None:
         self.config = bot.config.services
+        #self.tracks_limit = self.config.tracks_limit
         self.services: Dict[str, Service] = {
             "vk": VkService(bot, self.config.vk),
             "yam": YamService(bot, self.config.yam),
@@ -68,6 +69,7 @@ class ServiceManager:
                 continue
             try:
                 service.initialize()
+                service.tracks_limit = self.config.tracks_limit
             except errors.ServiceError as e:
                 service.is_enabled = False
                 service.error_message = str(e)
