@@ -262,7 +262,7 @@ class Player:
             else:
                 try:
                     self.next()
-                except errors.NoNextTrackError:
+                except Exception:
                     self.stop()
 
     def on_metadata_update(self, name: str, value: Any) -> None:
