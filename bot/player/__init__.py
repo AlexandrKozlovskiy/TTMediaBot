@@ -97,7 +97,6 @@ class Player:
             self._player.pause = False
             self.state = State.Playing
         self._player.volume = self.volume
-        self.state = State.Playing
 
     def pause(self) -> None:
         self.state = State.Paused
@@ -119,6 +118,7 @@ class Player:
             self.cache_manager.save()
         self._player.pause = False
         self._player.play(arg)
+        self.state = State.Playing
 
     def move(self, forward: bool) -> None:
         error = forward and errors.NoNextTrackError or errors.NoPreviousTrackError
@@ -156,7 +156,6 @@ class Player:
         if index < len(self.track_list) and index >= 0:
             self.track_index = index
             self._play(self.track.url)
-            self.state = State.Playing
         else:
             raise errors.IncorrectTrackIndexError()
 
