@@ -79,21 +79,23 @@ class Player:
         tracks: Optional[List[Track]] = None,
         start_track_index: Optional[int] = None,
     ) -> None:
-        if tracks != None:
-            self.track_list = tracks
-            if not start_track_index and self.mode == Mode.Random:
-                self.shuffle(True)
-                self.track_index = self._index_list[0]
-            else:
-                self.track_index = start_track_index if start_track_index else 0
+        if tracks != None or self.state ==State.Stopped:
+            if tracks != None:
+                self.track_list = tracks
+                if not start_track_index and self.mode == Mode.Random:
+                    self.shuffle(True)
+                    self.track_index = self._index_list[0]
+                elif start_track_index != self.track_index:
+                    self.track_index = start_track_index if start_track_index else 0
             try:
                 self._play(self.track.url)
             except YoutubeDLError:
-                if (len(tracks)==1):
-                    raise
+                if (len(    tracks)==1):
+                    raise   
                 self.next()
         else:
             self._player.pause = False
+            self.state = State.Playing
         self._player.volume = self.volume
         self.state = State.Playing
 

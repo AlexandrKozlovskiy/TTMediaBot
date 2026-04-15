@@ -68,10 +68,10 @@ class PlayPauseCommand(Command):
                 return self.translator.translate(
                     "The selected service is currently unavailable"
                 )
-        else:
+        elif self.player.track:
             if self.player.state == State.Playing:
                 self.player.pause()
-            elif self.player.state == State.Paused:
+            else:
                 self.player.play()
 
 
