@@ -53,6 +53,8 @@ def split(text: str, max_length: int = app_vars.max_message_length) -> List[str]
                 else:
                     lines.append(line)
             else:
+                if len(lines) == 1 and len(lines[0]) == 0:
+                    lines.clear()
                 words = [""]
                 for word in line.split(" "):
                     if len(word) <= max_length:
