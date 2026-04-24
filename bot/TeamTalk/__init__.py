@@ -62,7 +62,7 @@ def split(text: str, max_length: int = app_vars.max_message_length) -> List[str]
                         ):
                             words[-1] += " " + word
                         elif len(words) == 1 and len(words[0]) == 0:
-                            words[0] == word
+                            words[0] = word
                         else:
                             words.append(word)
                     else:
