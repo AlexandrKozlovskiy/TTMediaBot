@@ -58,6 +58,7 @@ class TeamTalkModel(BaseModel):
 
 class VkModel(BaseModel):
     enabled: bool = True
+    user_agent: str = ""
     token: str = ""
     tracks_limit: int = 300
 

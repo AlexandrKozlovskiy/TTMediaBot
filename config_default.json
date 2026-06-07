@@ -53,6 +53,7 @@
         "default_service": "vk",
         "vk": {
             "enabled": true,
+            "user_agent": "",
             "token": "",
             "tracks_limit": 300
         },
